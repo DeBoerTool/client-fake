@@ -1,0 +1,39 @@
+name: PHP Tests & QC
+on:
+  pull_request:
+    branches:
+      - trunk
+jobs:
+  phpunit:
+    name: Run test suite (${{ matrix.php-version }} on ${{ matrix.operating-system }})
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-version: ['8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP with Composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Cache Composer dependencies
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Test with PHPUnit
+        run: composer mod:ci
+
+      - name: Run laravel-pint-action
+        uses: aglipanci/laravel-pint-action@0.1.0

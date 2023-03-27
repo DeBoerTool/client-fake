@@ -1,13 +1,15 @@
 {
-    "name": "dbt/php-project",
-    "description": "PHP Project Scaffolding",
+    "name": "dbt/client-fake",
+    "description": "Easily fake Laravel's HTTP Client",
     "keywords": [
         "dbt",
-        "php"
+        "php",
+        "laravel",
+        "http"
     ],
-    "homepage": "https://github.com/dbt/php-project",
+    "homepage": "https://github.com/dbt/client-fake",
     "license": "MIT",
-    "type": "project",
+    "type": "library",
     "authors": [
         {
             "name": "Daniel S. Deboer",
@@ -16,30 +18,33 @@
         }
     ],
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.1",
+        "fakerphp/faker": "^1.21",
+        "illuminate/http": "^9.0|^10.0",
+        "guzzlehttp/guzzle": "^7.2"
     },
     "require-dev": {
-      "friendsofphp/php-cs-fixer": "^3.8",
-      "ext-pcov": "*",
-      "larapack/dd": "^1.1",
-      "phpunit/phpunit": "^9.0",
-      "vimeo/psalm": "^4.23"
+        "ext-pcov": "*",
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^7.0|^8.0",
+        "phpunit/phpunit": "^9.5.10|^10.0"
     },
     "autoload": {
         "psr-4": {
-            "Dbt\\PhpProject\\": "Source"
+            "Dbt\\ClientFake\\": "Source"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Dbt\\PhpProject\\Tests\\": "Tests"
+            "Dbt\\ClientFake\\Tests\\": "Tests"
         }
     },
     "scripts": {
         "test": "phpunit --no-coverage",
         "coverage": "phpunit --coverage-html Reports/coverage",
         "pcov": "php -d pcov.enabled=1 vendor/phpunit/phpunit/phpunit --coverage-html Reports/coverage",
-        "stat": "psalm"
+        "pint": "pint",
+        "pint-dry": "pint --test"
     },
     "config": {
         "sort-packages": true,

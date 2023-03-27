@@ -15,17 +15,8 @@ max_line_length = 80
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{xml,xml.dist}]
+[*.{xml,xml.dist,yml}]
 indent_size = 2
 
 [*.php]
 indent_size = 4
-
-[*.html]
-indent_size = 2
-
-[*.js]
-indent_size = 2
-
-[*.json]
-indent_size = 2
