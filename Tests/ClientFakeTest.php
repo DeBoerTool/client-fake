@@ -54,7 +54,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function using_invoke_instead_of_commit (): void
+    public function using_invoke_instead_of_commit(): void
     {
         $fact = $this->fact();
         $this->fake()->getFact($fact)();
@@ -107,7 +107,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function conditionally_disabling_and_enabling (): void
+    public function conditionally_disabling_and_enabling(): void
     {
         $this->fake()->getFact('fake')->enable(false)->commit();
 
@@ -119,7 +119,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function conditionally_disabling_with_closure (): void
+    public function conditionally_disabling_with_closure(): void
     {
         // This instance assertion tests that the closure's parameters are
         // resolved from the container.
@@ -138,7 +138,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function data_wrapping (): void
+    public function data_wrapping(): void
     {
         $breeds = ['breed1', 'breed2'];
         $this->fake()->getBreeds($breeds)->commit();
