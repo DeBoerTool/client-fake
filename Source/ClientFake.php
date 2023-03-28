@@ -25,7 +25,7 @@ class ClientFake
 
     public function __construct(
         protected readonly Application $app,
-        protected readonly ClientFakeOptions $options,
+        protected readonly ClientFakeOptionsInterface $options,
         Generator|null $faker = null,
     ) {
         $this->faker = $faker ?? Factory::create();
@@ -91,7 +91,7 @@ class ClientFake
             $this->fakes['*'] = fn (Request $request) => Http::response(
                 sprintf(
                     '%s catchall caught this url: %s',
-                    $this->options->service,
+                    $this->options->service(),
                     $request->url(),
                 ),
                 500,
@@ -102,7 +102,7 @@ class ClientFake
         // container. However, we're intending to target a specific service
         // here, so we use a focused binding. This means that other services
         // using the HTTP Client will not be affected.
-        $this->app->when($this->options->service)
+        $this->app->when($this->options->service())
             ->needs(HttpClientFactory::class)
             ->give(fn () => (new HttpClientFactory())
                 ->fake($this->fakes));
@@ -130,7 +130,7 @@ class ClientFake
         $this->fakes[$this->url($url)] = HttpClientFactory::response(
             is_array($data) ? $data : $this->app->call($data),
             $code,
-            $this->options->headers,
+            $this->options->headers(),
         );
 
         return $this;

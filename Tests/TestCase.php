@@ -11,21 +11,17 @@ class TestCase extends TestbenchTestCase
     {
         $this->assertSame(
             'true',
-            $this->getFakeHeader($response),
+            $response->header('Fake'),
             'No "Fake" header was found on the Response.',
         );
     }
 
     protected function assertRealResponse(Response $response): void
     {
-        $this->assertNull(
-            $this->getFakeHeader($response),
+        $this->assertSame(
+            '',
+            $response->header('Fake'),
             'A "Fake" header was found on the Response.',
         );
-    }
-
-    private function getFakeHeader(Response $response): string|null
-    {
-        return $response->headers()['Fake'][0] ?? null;
     }
 }
