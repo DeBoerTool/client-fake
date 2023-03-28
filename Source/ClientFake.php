@@ -23,12 +23,16 @@ class ClientFake
 
     protected readonly Generator $faker;
 
+    private ClientFakeEndpointsCollection $endpoints;
+
     public function __construct(
         protected readonly Application $app,
         protected readonly ClientFakeOptionsInterface $options,
         Generator|null $faker = null,
+        array $endpoints = [],
     ) {
         $this->faker = $faker ?? Factory::create();
+        $this->endpoints = new ClientFakeEndpointsCollection($endpoints);
     }
 
     public function __invoke(): self
@@ -142,5 +146,14 @@ class ClientFake
     protected function url(string|array $url): string
     {
         return $this->options->url($url);
+    }
+
+    public function __get(string $name)
+    {
+        if ($this->endpoints->has($name)) {
+            return $this->endpoints->get($name, $this);
+        }
+
+        return $this->$name;
     }
 }

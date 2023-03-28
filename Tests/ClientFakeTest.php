@@ -13,26 +13,6 @@ use Illuminate\Support\Str;
 
 class ClientFakeTest extends TestCase
 {
-    protected function service(): CatFacts
-    {
-        return resolve(CatFacts::class);
-    }
-
-    protected function http(): Factory
-    {
-        return resolve(Factory::class);
-    }
-
-    protected function fake(): CatFactsFake
-    {
-        return resolve(CatFactsFake::class);
-    }
-
-    protected function fact(): string
-    {
-        return sprintf('This is a fake fact. %s.', Str::random());
-    }
-
     /** @test */
     public function without_fakes(): void
     {

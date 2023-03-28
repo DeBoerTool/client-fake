@@ -2,6 +2,7 @@
 
 namespace Dbt\ClientFake;
 
+use Closure;
 use Dbt\ClientFake\Traits\AsData;
 
 class ClientFakeEndpoints
@@ -12,9 +13,14 @@ class ClientFakeEndpoints
     {
     }
 
-    public function fake()
-    {
+    public function fake(
+        string|array $url,
+        Closure|array $data,
+        int $code = 200,
+    ): self {
+        $this->clientFake->fake($url, $data, $code);
 
+        return $this;
     }
 
     public function done(): ClientFake

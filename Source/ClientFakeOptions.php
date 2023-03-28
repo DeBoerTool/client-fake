@@ -26,11 +26,6 @@ class ClientFakeOptions implements ClientFakeOptionsInterface
         return $this->service;
     }
 
-    public function base(): string
-    {
-        return $this->base;
-    }
-
     public function headers(): array
     {
         return $this->headers;
