@@ -44,4 +44,4 @@ jobs:
         run: composer test
 
       - name: Run Pint
-        uses: composer pint-dry
+        run: composer pint-dry
