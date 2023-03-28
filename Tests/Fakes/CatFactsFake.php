@@ -25,7 +25,7 @@ class CatFactsFake extends ClientFake
         parent::__construct(
             app: $app,
             options: $options,
-            endpoints: ['breeds' => BreedEps::class],
+            endpoints: ['breeds' => BreedEps::class, 'facts' => FactEps::class],
         );
     }
 

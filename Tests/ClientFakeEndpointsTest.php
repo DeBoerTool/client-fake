@@ -133,4 +133,25 @@ class ClientFakeEndpointsTest extends TestCase
             $this->service()->getFact()->json('fact'),
         );
     }
+
+    /** @test */
+    public function using_load(): void
+    {
+        $breeds = $this->breeds();
+        $fact = $this->fact();
+
+        $this->fake()
+            ->with(['breeds.index', $breeds], ['facts.show', $fact])
+            ->commit();
+
+        $breedsResponse = $this->service()->getBreeds();
+
+        $this->assertSame($breeds, $breedsResponse->json('data'));
+        $this->assertFakeResponse($breedsResponse);
+
+        $this->assertSame(
+            $fact,
+            $this->service()->getFact()->json('fact'),
+        );
+    }
 }
