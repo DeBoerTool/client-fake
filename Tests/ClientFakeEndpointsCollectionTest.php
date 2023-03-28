@@ -2,7 +2,7 @@
 
 namespace Dbt\ClientFake\Tests;
 use Dbt\ClientFake\ClientFakeEndpointsCollection;
-use Dbt\ClientFake\Tests\Fakes\BreedEndpoints;
+use Dbt\ClientFake\Tests\Fakes\BreedEps;
 use InvalidArgumentException;
 
 class ClientFakeEndpointsCollectionTest extends TestCase
@@ -11,7 +11,7 @@ class ClientFakeEndpointsCollectionTest extends TestCase
     public function constructing (): void
     {
         $collection = new ClientFakeEndpointsCollection([
-            'breeds' => BreedEndpoints::class,
+            'breeds' => BreedEps::class,
         ]);
 
         $this->assertInstanceOf(
@@ -31,7 +31,7 @@ class ClientFakeEndpointsCollectionTest extends TestCase
     public function has_a_key (): void
     {
         $collection = new ClientFakeEndpointsCollection([
-            'breeds' => BreedEndpoints::class,
+            'breeds' => BreedEps::class,
         ]);
 
         $this->assertTrue($collection->has('breeds'));
@@ -42,11 +42,11 @@ class ClientFakeEndpointsCollectionTest extends TestCase
     public function getting_a_member (): void
     {
         $collection = new ClientFakeEndpointsCollection([
-            'breeds' => BreedEndpoints::class,
+            'breeds' => BreedEps::class,
         ]);
 
         $this->assertInstanceOf(
-            BreedEndpoints::class,
+            BreedEps::class,
             $collection->get('breeds', $this->fake()),
         );
 

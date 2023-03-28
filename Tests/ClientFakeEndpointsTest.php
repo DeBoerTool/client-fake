@@ -2,7 +2,7 @@
 
 namespace Dbt\ClientFake\Tests;
 
-use Dbt\ClientFake\Tests\Fakes\BreedEndpoints;
+use Dbt\ClientFake\Tests\Fakes\BreedEps;
 use Throwable;
 
 class ClientFakeEndpointsTest extends TestCase
@@ -28,7 +28,7 @@ class ClientFakeEndpointsTest extends TestCase
     public function getting_the_endpoints_object (): void
     {
         $this->assertInstanceOf(
-            BreedEndpoints::class,
+            BreedEps::class,
             $this->fake()->breeds,
         );
     }
@@ -42,6 +42,28 @@ class ClientFakeEndpointsTest extends TestCase
         $this->fake()->breeds
                 ->index($breeds)
                 ->done()
+            ->getFact($fact)
+            ->commit();
+
+        $this->assertSame(
+            $breeds,
+            $this->service()->getBreeds()->json('data'),
+        );
+
+        $this->assertSame(
+            $fact,
+            $this->service()->getFact()->json('fact'),
+        );
+    }
+
+    /** @test */
+    public function using_a_closure (): void
+    {
+        $breeds = $this->breeds();
+        $fact = $this->fact();
+
+        $this->fake()
+            ->breeds->with(fn (BreedEps $eps) => $eps->index($breeds))
             ->getFact($fact)
             ->commit();
 

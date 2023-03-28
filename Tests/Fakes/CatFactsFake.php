@@ -10,7 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
  * The CatFacts Client Fake. This provides route faking capabilities for the
  * CatFacts Client.
  *
- * @property \Dbt\ClientFake\Tests\Fakes\BreedEndpoints $breeds
+ * @property \Dbt\ClientFake\Tests\Fakes\BreedEps $breeds
  */
 class CatFactsFake extends ClientFake
 {
@@ -25,7 +25,7 @@ class CatFactsFake extends ClientFake
         parent::__construct(
             app: $app,
             options: $options,
-            endpoints: ['breeds' => BreedEndpoints::class],
+            endpoints: ['breeds' => BreedEps::class],
         );
     }
 
