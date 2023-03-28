@@ -3,6 +3,7 @@
 namespace Dbt\ClientFake;
 
 use Closure;
+use Dbt\ClientFake\Generators\Generated;
 use Dbt\ClientFake\Traits\AsData;
 use Exception;
 use Faker\Factory;
@@ -11,10 +12,13 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 
 class ClientFake
 {
     use AsData;
+
+    public const GENERATE = 'CLIENT_FAKE_GENERATE';
 
     protected bool $catchall = true;
 
@@ -133,7 +137,9 @@ class ClientFake
         int $code = 200,
     ): self {
         $this->fakes[$this->url($url)] = HttpClientFactory::response(
-            is_array($data) ? $data : $this->app->call($data),
+            is_array($data)
+                ? $data
+                : $this->app->call($data),
             $code,
             $this->options->headers(),
         );
@@ -143,13 +149,31 @@ class ClientFake
 
     public function with(array ...$calls): self
     {
-        foreach ($calls as $call) {
+        $this->assertValidCallList($calls);
+
+        foreach ($calls as $index => $call) {
             // Shift the path off the front of the array and explode it into
             // the endpoint name and method name.
             [$epName, $methodName] = explode('.', array_shift($call));
 
-            // The rest of the array is the arguments to pass to the method.
-            $this->endpoints->get($epName, $this)->{$methodName}(...$call);
+            $ep = $this->endpoints->get($epName, $this);
+
+            if (count($call) === 1 && $call[0] === self::GENERATE) {
+                // When the only argument in the GENERATE constant, call the
+                // generator function and pass the results to the fake endpoint
+                // method.
+                $generatorName = sprintf('%s%s', $methodName, 'Generator');
+
+                $generated = $this->assertIsGenerated(
+                    $generatorName,
+                    $ep->{$generatorName}(),
+                );
+
+                $ep->{$methodName}(...$generated->arguments);
+            } else {
+                // Otherwise, just pass the arguments to the endpoint method.
+                $ep->{$methodName}(...$call);
+            }
         }
 
         return $this;
@@ -168,6 +192,51 @@ class ClientFake
         return $this->options->url($url);
     }
 
+    protected function assertValidCallList(array $calls): void
+    {
+        $fail = fn (
+            int $index,
+            string $reason,
+        ) => throw new InvalidArgumentException(
+            sprintf('Invalid call [%s]: %s', $index, $reason),
+        );
+
+        foreach ($calls as $index => $call) {
+            if (!array_is_list($call)) {
+                $fail($index, 'Not a list.');
+            }
+
+            if (count($call) < 1) {
+                $fail($index, 'Must have at least one element.');
+            }
+
+            if (!is_string($call[0])) {
+                $fail($index, 'First element must be a string.');
+            }
+
+            if (!str_contains($call[0], '.')) {
+                $fail(
+                    $index,
+                    'First element must be in the format of "endpoint.method".',
+                );
+            }
+        }
+    }
+
+    protected function assertIsGenerated(string $name, mixed $value): Generated
+    {
+        if (!($value instanceof Generated)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Generator "%s" did not return a Generated instance.',
+                    $name,
+                ),
+            );
+        }
+
+        return $value;
+    }
+
     /**
      * @throws \Exception
      */
@@ -177,11 +246,13 @@ class ClientFake
             return $this->endpoints->get($name, $this);
         }
 
-        throw new Exception(sprintf(
-            'Undefined property: %s::$%s',
-            static::class,
-            $name,
-        ));
+        throw new Exception(
+            sprintf(
+                'Undefined property: %s::$%s',
+                static::class,
+                $name,
+            )
+        );
     }
 
     /**
@@ -196,10 +267,12 @@ class ClientFake
             );
         }
 
-        throw new Exception(sprintf(
-            'Undefined method: %s::%s()',
-            static::class,
-            $name,
-        ));
+        throw new Exception(
+            sprintf(
+                'Undefined method: %s::%s()',
+                static::class,
+                $name,
+            )
+        );
     }
 }
