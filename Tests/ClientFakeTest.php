@@ -4,9 +4,11 @@
 
 namespace Dbt\ClientFake\Tests;
 
-use Dbt\ClientFake\Tests\Fakes\CatFacts;
+use Dbt\ClientFake\ClientFake;
+use Dbt\ClientFake\Tests\Fakes\BreedEps;
 use Dbt\ClientFake\Tests\Fakes\FakeService;
 use Illuminate\Http\Client\RequestException;
+use InvalidArgumentException;
 
 class ClientFakeTest extends TestCase
 {
@@ -124,5 +126,61 @@ class ClientFakeTest extends TestCase
 
         $this->assertFakeResponse($response);
         $this->assertSame($breeds, $response->json('data'));
+    }
+
+    /** @test */
+    public function using_generators(): void
+    {
+        $this->fake()->with(['breeds.index', ClientFake::GENERATE])->commit();
+
+        $response = $this->service()->getBreeds();
+
+        $this->assertFakeResponse($response);
+        $this->assertSame(BreedEps::BREEDS, $response->json('data'));
+    }
+
+    /** @test */
+    public function failing_with_not_a_list (): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Not a list.');
+
+        $this->fake()->with(['foo' => 'bar'])->commit();
+    }
+
+    /** @test */
+    public function failing_with_empty_array(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('at least one element');
+
+        $this->fake()->with([])->commit();
+    }
+
+    /** @test */
+    public function failing_with_not_a_string(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must be a string');
+
+        $this->fake()->with([true])->commit();
+    }
+
+    /** @test */
+    public function failing_with_bad_format(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('"endpoint.method"');
+
+        $this->fake()->with(['bad-format'])->commit();
+    }
+
+    /** @test */
+    public function failing_with_bad_generator_method (): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('a Generated instance');
+
+        $this->fake()->with(['facts.show', ClientFake::GENERATE])->commit();
     }
 }

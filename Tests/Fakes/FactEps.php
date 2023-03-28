@@ -14,4 +14,13 @@ class FactEps extends ClientFakeEndpoints
     {
         return $this->fake('fact', ['fact' => $fact]);
     }
+
+    /**
+     * Calling this generator will fail, as it should return a Generated
+     * instance but instead returns an array.
+     */
+    public function showGenerator(): array
+    {
+        return [];
+    }
 }
