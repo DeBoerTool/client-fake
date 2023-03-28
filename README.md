@@ -13,7 +13,7 @@ This is useful when you have one service that you want to fake, but not others.
 You can install the package via composer:
 
 ```bash
-composer require dbt/client-fake
+composer require dbt/client-fake --dev
 ```
 
 ## Usage

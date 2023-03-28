@@ -41,4 +41,4 @@ jobs:
         run: composer test
 
       - name: Run Pint
-        uses: aglipanci/laravel-pint-action@0.1.0
+        uses: composer pint-dry
