@@ -140,7 +140,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function failing_with_not_a_list (): void
+    public function failing_with_not_a_list(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Not a list.');
@@ -176,7 +176,7 @@ class ClientFakeTest extends TestCase
     }
 
     /** @test */
-    public function failing_with_bad_generator_method (): void
+    public function failing_with_bad_generator_method(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('a Generated instance');
