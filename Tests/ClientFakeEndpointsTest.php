@@ -145,13 +145,12 @@ class ClientFakeEndpointsTest extends TestCase
             ->commit();
 
         $breedsResponse = $this->service()->getBreeds();
+        $factsResponse = $this->service()->getFact();
 
         $this->assertSame($breeds, $breedsResponse->json('data'));
         $this->assertFakeResponse($breedsResponse);
 
-        $this->assertSame(
-            $fact,
-            $this->service()->getFact()->json('fact'),
-        );
+        $this->assertSame($fact, $factsResponse->json('fact'));
+        $this->assertFakeResponse($factsResponse);
     }
 }
