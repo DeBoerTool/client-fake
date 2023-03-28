@@ -4,6 +4,7 @@ namespace Dbt\ClientFake;
 
 use Closure;
 use Dbt\ClientFake\Traits\AsData;
+use Exception;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Contracts\Foundation\Application;
@@ -140,6 +141,11 @@ class ClientFake
         return $this;
     }
 
+    public function fakes(): array
+    {
+        return $this->fakes;
+    }
+
     /**
      * Generate the full URL using the ClientFakeOptions URL generator.
      */
@@ -148,12 +154,38 @@ class ClientFake
         return $this->options->url($url);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function __get(string $name)
     {
         if ($this->endpoints->has($name)) {
             return $this->endpoints->get($name, $this);
         }
 
-        return $this->$name;
+        throw new Exception(sprintf(
+            'Undefined property: %s::$%s',
+            static::class,
+            $name,
+        ));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function __call(string $name, array $args)
+    {
+        if ($this->endpoints->has($name)) {
+            return call_user_func(
+                $this->endpoints->get($name, $this),
+                ...$args,
+            );
+        }
+
+        throw new Exception(sprintf(
+            'Undefined method: %s::%s()',
+            static::class,
+            $name,
+        ));
     }
 }

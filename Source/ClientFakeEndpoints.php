@@ -13,6 +13,18 @@ class ClientFakeEndpoints
     {
     }
 
+    public function __invoke(Closure $closure): ClientFake
+    {
+        return $this->with($closure);
+    }
+
+    public function with(Closure $closure): ClientFake
+    {
+        $closure($this);
+
+        return $this->clientFake;
+    }
+
     public function fake(
         string|array $url,
         Closure|array $data,
@@ -21,13 +33,6 @@ class ClientFakeEndpoints
         $this->clientFake->fake($url, $data, $code);
 
         return $this;
-    }
-
-    public function with(Closure $closure): ClientFake
-    {
-        $closure($this);
-
-        return $this->clientFake;
     }
 
     public function done(): ClientFake
