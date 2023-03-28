@@ -3,6 +3,7 @@
 namespace Dbt\ClientFake;
 
 use Closure;
+use Dbt\ClientFake\Traits\AsData;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Contracts\Foundation\Application;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Http;
 
 class ClientFake
 {
+    use AsData;
+
     protected bool $catchall = true;
 
     protected bool $enabled = true;
@@ -20,12 +23,16 @@ class ClientFake
 
     protected readonly Generator $faker;
 
+    private ClientFakeEndpointsCollection $endpoints;
+
     public function __construct(
         protected readonly Application $app,
         protected readonly ClientFakeOptionsInterface $options,
         Generator|null $faker = null,
+        array $endpoints = [],
     ) {
         $this->faker = $faker ?? Factory::create();
+        $this->endpoints = new ClientFakeEndpointsCollection($endpoints);
     }
 
     public function __invoke(): self
@@ -141,11 +148,12 @@ class ClientFake
         return $this->options->url($url);
     }
 
-    /**
-     * Format an array as a child of the "data" key.
-     */
-    protected function asData(array $data): array
+    public function __get(string $name)
     {
-        return ['data' => $data];
+        if ($this->endpoints->has($name)) {
+            return $this->endpoints->get($name, $this);
+        }
+
+        return $this->$name;
     }
 }

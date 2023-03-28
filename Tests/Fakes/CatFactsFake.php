@@ -9,16 +9,24 @@ use Illuminate\Contracts\Foundation\Application;
 /**
  * The CatFacts Client Fake. This provides route faking capabilities for the
  * CatFacts Client.
+ *
+ * @property \Dbt\ClientFake\Tests\Fakes\BreedEndpoints $breeds
  */
 class CatFactsFake extends ClientFake
 {
     public function __construct(Application $app)
     {
-        parent::__construct($app, new ClientFakeOptions(
+        $options = new ClientFakeOptions(
             CatFacts::class,
             'https://catfact.ninja',
             false,
-        ));
+        );
+
+        parent::__construct(
+            app: $app,
+            options: $options,
+            endpoints: ['breeds' => BreedEndpoints::class],
+        );
     }
 
     public function getFact(string $fact): self
