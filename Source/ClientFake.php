@@ -3,6 +3,7 @@
 namespace Dbt\ClientFake;
 
 use Closure;
+use Dbt\ClientFake\Traits\AsData;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Contracts\Foundation\Application;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Http;
 
 class ClientFake
 {
+    use AsData;
+
     protected bool $catchall = true;
 
     protected bool $enabled = true;
@@ -139,13 +142,5 @@ class ClientFake
     protected function url(string|array $url): string
     {
         return $this->options->url($url);
-    }
-
-    /**
-     * Format an array as a child of the "data" key.
-     */
-    protected function asData(array $data): array
-    {
-        return ['data' => $data];
     }
 }
