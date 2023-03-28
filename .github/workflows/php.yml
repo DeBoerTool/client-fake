@@ -3,6 +3,9 @@ on:
   pull_request:
     branches:
       - trunk
+  push:
+    branches:
+      - trunk
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,4 +44,4 @@ jobs:
         run: composer test
 
       - name: Run Pint
-        uses: aglipanci/laravel-pint-action@0.1.0
+        run: composer pint-dry

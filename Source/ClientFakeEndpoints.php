@@ -23,6 +23,13 @@ class ClientFakeEndpoints
         return $this;
     }
 
+    public function with(Closure $closure): ClientFake
+    {
+        $closure($this);
+
+        return $this->clientFake;
+    }
+
     public function done(): ClientFake
     {
         return $this->clientFake;

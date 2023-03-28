@@ -5,11 +5,8 @@
 namespace Dbt\ClientFake\Tests;
 
 use Dbt\ClientFake\Tests\Fakes\CatFacts;
-use Dbt\ClientFake\Tests\Fakes\CatFactsFake;
 use Dbt\ClientFake\Tests\Fakes\FakeService;
-use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Str;
 
 class ClientFakeTest extends TestCase
 {
