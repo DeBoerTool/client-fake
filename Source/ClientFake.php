@@ -141,6 +141,20 @@ class ClientFake
         return $this;
     }
 
+    public function with(array ...$calls): self
+    {
+        foreach ($calls as $call) {
+            // Shift the path off the front of the array and explode it into
+            // the endpoint name and method name.
+            [$epName, $methodName] = explode('.', array_shift($call));
+
+            // The rest of the array is the arguments to pass to the method.
+            $this->endpoints->get($epName, $this)->{$methodName}(...$call);
+        }
+
+        return $this;
+    }
+
     public function fakes(): array
     {
         return $this->fakes;
