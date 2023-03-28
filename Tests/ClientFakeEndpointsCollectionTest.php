@@ -1,6 +1,7 @@
 <?php
 
 namespace Dbt\ClientFake\Tests;
+
 use Dbt\ClientFake\ClientFakeEndpointsCollection;
 use Dbt\ClientFake\Tests\Fakes\BreedEps;
 use InvalidArgumentException;
@@ -8,7 +9,7 @@ use InvalidArgumentException;
 class ClientFakeEndpointsCollectionTest extends TestCase
 {
     /** @test */
-    public function constructing (): void
+    public function constructing(): void
     {
         $collection = new ClientFakeEndpointsCollection([
             'breeds' => BreedEps::class,
@@ -28,7 +29,7 @@ class ClientFakeEndpointsCollectionTest extends TestCase
     }
 
     /** @test */
-    public function has_a_key (): void
+    public function has_a_key(): void
     {
         $collection = new ClientFakeEndpointsCollection([
             'breeds' => BreedEps::class,
@@ -39,7 +40,7 @@ class ClientFakeEndpointsCollectionTest extends TestCase
     }
 
     /** @test */
-    public function getting_a_member (): void
+    public function getting_a_member(): void
     {
         $collection = new ClientFakeEndpointsCollection([
             'breeds' => BreedEps::class,

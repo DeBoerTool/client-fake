@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php
+
+/** @noinspection PhpUnhandledExceptionInspection */
 
 namespace Dbt\ClientFake\Tests;
 
@@ -8,7 +10,7 @@ use Throwable;
 class ClientFakeEndpointsTest extends TestCase
 {
     /** @test */
-    public function failing_to_get_the_endpoints_object (): void
+    public function failing_to_get_the_endpoints_object(): void
     {
         try {
             $this->fake()->somethingThatDoesntExist;
@@ -25,7 +27,7 @@ class ClientFakeEndpointsTest extends TestCase
     }
 
     /** @test */
-    public function getting_the_endpoints_object (): void
+    public function getting_the_endpoints_object(): void
     {
         $this->assertInstanceOf(
             BreedEps::class,
@@ -34,7 +36,7 @@ class ClientFakeEndpointsTest extends TestCase
     }
 
     /** @test */
-    public function using_the_endpoints (): void
+    public function using_the_endpoints(): void
     {
         $breeds = $this->breeds();
         $fact = $this->fact();
@@ -57,7 +59,7 @@ class ClientFakeEndpointsTest extends TestCase
     }
 
     /** @test */
-    public function using_a_closure (): void
+    public function using_a_closure(): void
     {
         $breeds = $this->breeds();
         $fact = $this->fact();
