@@ -1,6 +1,6 @@
 <?php
 
-namespace Dbt\ClientFake\Generators;
+namespace Dbt\ClientFake\Providers;
 
 class Generated
 {

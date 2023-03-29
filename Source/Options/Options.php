@@ -1,11 +1,11 @@
 <?php
 
-namespace Dbt\ClientFake;
+namespace Dbt\ClientFake\Options;
 
 /**
  * A class that defines the options for the ClientFake.
  */
-class ClientFakeOptions implements ClientFakeOptionsInterface
+class Options implements OptionsInterface
 {
     /**
      * @param string $service The fully-qualified class name of the service.

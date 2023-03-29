@@ -24,9 +24,9 @@ If you want to use the `ClientFake` directly, you can do so like this (for examp
 
 ```php
 use Dbt\ClientFake\ClientFake;
-use Dbt\ClientFake\ClientFakeOptions;
+use Dbt\ClientFake\Options\Options;
 
-$clientFake = new ClientFake($app, new ClientFakeOptions(
+$clientFake = new ClientFake($app, new Options(
     service: MyService::class,
     base: 'https://my-service.com',
     // Or false if the API isn't versioned.

@@ -3,7 +3,9 @@
 namespace Dbt\ClientFake;
 
 use Closure;
-use Dbt\ClientFake\Generators\Generated;
+use Dbt\ClientFake\Endpoints\EndpointsMap;
+use Dbt\ClientFake\Options\OptionsInterface;
+use Dbt\ClientFake\Providers\ProviderMap;
 use Dbt\ClientFake\Traits\AsData;
 use Exception;
 use Faker\Factory;
@@ -18,8 +20,6 @@ class ClientFake
 {
     use AsData;
 
-    public const GENERATE = 'CLIENT_FAKE_GENERATE';
-
     protected bool $catchall = true;
 
     protected bool $enabled = true;
@@ -28,16 +28,23 @@ class ClientFake
 
     protected readonly Generator $faker;
 
-    private ClientFakeEndpointsCollection $endpoints;
+    private EndpointsMap $endpoints;
 
+    private ProviderMap $providers;
+
+    /**
+     * @throws \Dbt\ClientFake\Exceptions\NotAMapException
+     */
     public function __construct(
         protected readonly Application $app,
-        protected readonly ClientFakeOptionsInterface $options,
+        protected readonly OptionsInterface $options,
         Generator|null $faker = null,
         array $endpoints = [],
+        array $providers = [],
     ) {
         $this->faker = $faker ?? Factory::create();
-        $this->endpoints = new ClientFakeEndpointsCollection($endpoints);
+        $this->endpoints = new EndpointsMap($endpoints);
+        $this->providers = new ProviderMap($providers);
     }
 
     public function __invoke(): self
@@ -147,33 +154,48 @@ class ClientFake
         return $this;
     }
 
+    /**
+     * @throws \Dbt\ClientFake\Exceptions\NoSuchProviderException
+     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function provide(array $paths): self
+    {
+        foreach ($paths as $path) {
+            [$epName, $methodName] = explode('.', $path);
+
+            $this->endpoints->make($epName, $this)->call(
+                $methodName,
+                ...$this->providers
+                    ->make($path, $this->app)
+                    ->provide()
+                    ->arguments
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add multiple fakes at once. Each fake is an array in the format of
+     * ['endpoints.method', 'and', 'the params', 'to pass'].
+     *
+     * The method iterates through the list, constructing the given endpoints
+     * class and calling the given method on that class, passing in whatever
+     * parameters you have provided.
+     *
+     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
+     */
     public function with(array ...$calls): self
     {
         $this->assertValidCallList($calls);
 
-        foreach ($calls as $index => $call) {
+        foreach ($calls as $call) {
             // Shift the path off the front of the array and explode it into
             // the endpoint name and method name.
-            [$epName, $methodName] = explode('.', array_shift($call));
+            [$ep, $method] = explode('.', array_shift($call));
 
-            $ep = $this->endpoints->get($epName, $this);
-
-            if (count($call) === 1 && $call[0] === self::GENERATE) {
-                // When the only argument in the GENERATE constant, call the
-                // generator function and pass the results to the fake endpoint
-                // method.
-                $generatorName = sprintf('%s%s', $methodName, 'Generator');
-
-                $generated = $this->assertIsGenerated(
-                    $generatorName,
-                    $ep->{$generatorName}(),
-                );
-
-                $ep->{$methodName}(...$generated->arguments);
-            } else {
-                // Otherwise, just pass the arguments to the endpoint method.
-                $ep->{$methodName}(...$call);
-            }
+            $this->endpoints->make($ep, $this)->call($method, ...$call);
         }
 
         return $this;
@@ -223,27 +245,13 @@ class ClientFake
         }
     }
 
-    protected function assertIsGenerated(string $name, mixed $value): Generated
-    {
-        if (!($value instanceof Generated)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Generator "%s" did not return a Generated instance.',
-                    $name,
-                ),
-            );
-        }
-
-        return $value;
-    }
-
     /**
      * @throws \Exception
      */
     public function __get(string $name)
     {
         if ($this->endpoints->has($name)) {
-            return $this->endpoints->get($name, $this);
+            return $this->endpoints->make($name, $this);
         }
 
         throw new Exception(
@@ -262,7 +270,7 @@ class ClientFake
     {
         if ($this->endpoints->has($name)) {
             return call_user_func(
-                $this->endpoints->get($name, $this),
+                $this->endpoints->make($name, $this),
                 ...$args,
             );
         }

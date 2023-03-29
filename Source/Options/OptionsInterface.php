@@ -1,13 +1,13 @@
 <?php
 
-namespace Dbt\ClientFake;
+namespace Dbt\ClientFake\Options;
 
 /**
  * An interface that represents the required option for the ClientFake. You can
  * simply use the provided ClientFakeOptions object, but if you wish to define
  * your own, it must implement this interface.
  */
-interface ClientFakeOptionsInterface
+interface OptionsInterface
 {
     /**
      * @param string|array $fragment The URL fragment to append to the base URL.

@@ -36,7 +36,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Dbt\\ClientFake\\Tests\\": "Tests"
+            "Dbt\\ClientFake\\Tests\\": "Tests",
+            "Dbt\\ClientFake\\TestDoubles\\": "TestDoubles"
         }
     },
     "scripts": {

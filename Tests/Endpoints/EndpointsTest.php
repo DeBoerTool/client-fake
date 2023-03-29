@@ -1,14 +1,17 @@
 <?php
 
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Dbt\ClientFake\Tests;
+namespace Dbt\ClientFake\Tests\Endpoints;
 
-use Dbt\ClientFake\Tests\Fakes\BreedEps;
-use Dbt\ClientFake\Tests\Fakes\CatFactsFake;
+use Dbt\ClientFake\TestDoubles\CatFactsFake;
+use Dbt\ClientFake\TestDoubles\Endpoints\Breeds;
+use Dbt\ClientFake\Tests\TestCase;
 use Throwable;
 
-class ClientFakeEndpointsTest extends TestCase
+class EndpointsTest extends TestCase
 {
     /** @test */
     public function failing_to_get_the_endpoints(): void
@@ -31,7 +34,7 @@ class ClientFakeEndpointsTest extends TestCase
     public function getting_the_endpoints(): void
     {
         $this->assertInstanceOf(
-            BreedEps::class,
+            Breeds::class,
             $this->fake()->breeds,
         );
     }
@@ -57,7 +60,7 @@ class ClientFakeEndpointsTest extends TestCase
     public function calling_the_endpoints(): void
     {
         $fake = $this->fake()->breeds(
-            fn (BreedEps $breeds) => $breeds->index([]),
+            fn (Breeds $breeds) => $breeds->index([]),
         );
 
         $this->assertArrayHasKey(
@@ -97,7 +100,7 @@ class ClientFakeEndpointsTest extends TestCase
         $fact = $this->fact();
 
         $this->fake()
-            ->breeds->with(fn (BreedEps $eps) => $eps->index($breeds))
+            ->breeds->with(fn (Breeds $eps) => $eps->index($breeds))
             ->getFact($fact)
             ->commit();
 
@@ -119,7 +122,7 @@ class ClientFakeEndpointsTest extends TestCase
         $fact = $this->fact();
 
         $this->fake()
-            ->breeds(fn (BreedEps $eps) => $eps->index($breeds))
+            ->breeds(fn (Breeds $eps) => $eps->index($breeds))
             ->getFact($fact)
             ->commit();
 

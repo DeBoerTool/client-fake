@@ -1,11 +1,12 @@
 <?php
 
-namespace Dbt\ClientFake;
+namespace Dbt\ClientFake\Endpoints;
 
 use Closure;
+use Dbt\ClientFake\ClientFake;
 use Dbt\ClientFake\Traits\AsData;
 
-class ClientFakeEndpoints
+class Endpoints
 {
     use AsData;
 
@@ -33,6 +34,11 @@ class ClientFakeEndpoints
         $this->clientFake->fake($url, $data, $code);
 
         return $this;
+    }
+
+    public function call(string $method, mixed ...$args): void
+    {
+        $this->{$method}(...$args);
     }
 
     public function done(): ClientFake
