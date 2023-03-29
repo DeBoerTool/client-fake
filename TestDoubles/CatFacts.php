@@ -1,6 +1,6 @@
 <?php
 
-namespace Dbt\ClientFake\Tests\Fakes;
+namespace Dbt\ClientFake\TestDoubles;
 
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\Response;

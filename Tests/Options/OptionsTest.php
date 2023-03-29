@@ -1,16 +1,17 @@
 <?php
 
-namespace Dbt\ClientFake\Tests;
+namespace Dbt\ClientFake\Tests\Options;
 
-use Dbt\ClientFake\ClientFakeOptions;
-use Dbt\ClientFake\Tests\Fakes\CatFacts;
+use Dbt\ClientFake\Options\Options;
+use Dbt\ClientFake\TestDoubles\CatFacts;
+use Dbt\ClientFake\Tests\TestCase;
 
-class ClientFakeOptionsTest extends TestCase
+class OptionsTest extends TestCase
 {
     /** @test */
     public function getting_a_url_with_a_version(): void
     {
-        $options = new ClientFakeOptions(
+        $options = new Options(
             CatFacts::class,
             'https://example.com',
         );
@@ -29,7 +30,7 @@ class ClientFakeOptionsTest extends TestCase
     /** @test */
     public function getting_a_url_without_a_version(): void
     {
-        $options = new ClientFakeOptions(
+        $options = new Options(
             CatFacts::class,
             'https://example.com',
             false,

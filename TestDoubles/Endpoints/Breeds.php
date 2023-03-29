@@ -1,15 +1,15 @@
 <?php
 
-namespace Dbt\ClientFake\Tests\Fakes;
+namespace Dbt\ClientFake\TestDoubles\Endpoints;
 
-use Dbt\ClientFake\ClientFakeEndpoints;
-use Dbt\ClientFake\Generators\Generated;
+use Dbt\ClientFake\Endpoints\Endpoints;
+use Dbt\ClientFake\Providers\Generated;
 
 /**
- * @method \Dbt\ClientFake\Tests\Fakes\CatFactsFake done()
- * @method \Dbt\ClientFake\Tests\Fakes\CatFactsFake with(\Closure $closure)
+ * @method \Dbt\ClientFake\TestDoubles\CatFactsFake done()
+ * @method \Dbt\ClientFake\TestDoubles\CatFactsFake with(\Closure $closure)
  */
-class BreedEps extends ClientFakeEndpoints
+class Breeds extends Endpoints
 {
     public const BREEDS = ['generated breed 1', 'generated breed 2'];
 

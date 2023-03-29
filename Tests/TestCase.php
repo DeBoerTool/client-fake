@@ -2,8 +2,8 @@
 
 namespace Dbt\ClientFake\Tests;
 
-use Dbt\ClientFake\Tests\Fakes\CatFacts;
-use Dbt\ClientFake\Tests\Fakes\CatFactsFake;
+use Dbt\ClientFake\TestDoubles\CatFacts;
+use Dbt\ClientFake\TestDoubles\CatFactsFake;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
