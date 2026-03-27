@@ -4,12 +4,16 @@ namespace Dbt\ClientFake;
 
 use Closure;
 use Dbt\ClientFake\Endpoints\EndpointsMap;
+use Dbt\ClientFake\Exceptions\NoSuchEndpointsException;
+use Dbt\ClientFake\Exceptions\NoSuchProviderException;
+use Dbt\ClientFake\Exceptions\NotAMapException;
 use Dbt\ClientFake\Options\OptionsInterface;
 use Dbt\ClientFake\Providers\ProviderMap;
 use Dbt\ClientFake\Traits\AsData;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Http\Client\Request;
@@ -33,12 +37,12 @@ class ClientFake
     private ProviderMap $providers;
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NotAMapException
+     * @throws NotAMapException
      */
     public function __construct(
         protected readonly Application $app,
         protected readonly OptionsInterface $options,
-        Generator|null $faker = null,
+        ?Generator $faker = null,
         array $endpoints = [],
         array $providers = [],
     ) {
@@ -58,7 +62,7 @@ class ClientFake
      * a setup callback may be passed it, and its dependencies will be resolved
      * from the container.
      */
-    public function enable(bool $when, Closure|null $otherwise = null): self
+    public function enable(bool $when, ?Closure $otherwise = null): self
     {
         $this->enabled = $when;
 
@@ -120,7 +124,7 @@ class ClientFake
         // using the HTTP Client will not be affected.
         $this->app->when($this->options->service())
             ->needs(HttpClientFactory::class)
-            ->give(fn () => (new HttpClientFactory())
+            ->give(fn () => (new HttpClientFactory)
                 ->fake($this->fakes));
 
         return $this;
@@ -155,9 +159,9 @@ class ClientFake
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchProviderException
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws NoSuchProviderException
+     * @throws NoSuchEndpointsException
+     * @throws BindingResolutionException
      */
     public function provide(array $paths): self
     {
@@ -184,7 +188,7 @@ class ClientFake
      * class and calling the given method on that class, passing in whatever
      * parameters you have provided.
      *
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
+     * @throws NoSuchEndpointsException
      */
     public function with(array ...$calls): self
     {
@@ -246,7 +250,7 @@ class ClientFake
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __get(string $name)
     {
@@ -264,7 +268,7 @@ class ClientFake
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __call(string $name, array $args)
     {

@@ -14,7 +14,7 @@ use Illuminate\Contracts\Foundation\Application;
  * The CatFacts Client Fake. This provides route faking capabilities for the
  * CatFacts Client.
  *
- * @property \Dbt\ClientFake\TestDoubles\Endpoints\Breeds $breeds
+ * @property Breeds $breeds
  */
 class CatFactsFake extends ClientFake
 {

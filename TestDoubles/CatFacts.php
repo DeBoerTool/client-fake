@@ -3,6 +3,7 @@
 namespace Dbt\ClientFake\TestDoubles;
 
 use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 
 /**
@@ -11,12 +12,10 @@ use Illuminate\Http\Client\Response;
  */
 class CatFacts
 {
-    public function __construct(public Factory $http)
-    {
-    }
+    public function __construct(public Factory $http) {}
 
     /**
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function getFact(): Response
     {
@@ -24,7 +23,7 @@ class CatFacts
     }
 
     /**
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function getBreeds(): Response
     {
@@ -32,7 +31,7 @@ class CatFacts
     }
 
     /**
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     protected function get(string $url): Response
     {

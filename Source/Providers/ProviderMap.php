@@ -4,6 +4,7 @@ namespace Dbt\ClientFake\Providers;
 
 use Dbt\ClientFake\Exceptions\NoSuchProviderException;
 use Dbt\ClientFake\Exceptions\NotAMapException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 
 class ProviderMap
@@ -12,7 +13,7 @@ class ProviderMap
     private array $providers;
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NotAMapException
+     * @throws NotAMapException
      */
     public function __construct(array $providers)
     {
@@ -33,7 +34,7 @@ class ProviderMap
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchProviderException
+     * @throws NoSuchProviderException
      */
     public function get(string $key): string
     {
@@ -42,8 +43,8 @@ class ProviderMap
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchProviderException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws NoSuchProviderException
+     * @throws BindingResolutionException
      */
     public function make(string $key, Application $app): ProviderInterface
     {

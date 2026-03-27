@@ -15,7 +15,5 @@ class Facts extends Endpoints
         return $this->fake('fact', ['fact' => $fact]);
     }
 
-    public function faker(): self
-    {
-    }
+    public function faker(): self {}
 }
