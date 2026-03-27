@@ -8,9 +8,7 @@ use Faker\Generator;
 
 class FactsShow implements ProviderInterface
 {
-    public function __construct(public readonly Generator $faker)
-    {
-    }
+    public function __construct(public readonly Generator $faker) {}
 
     public function provide(): Generated
     {

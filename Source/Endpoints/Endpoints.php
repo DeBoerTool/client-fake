@@ -10,9 +10,7 @@ class Endpoints
 {
     use AsData;
 
-    public function __construct(protected ClientFake $clientFake)
-    {
-    }
+    public function __construct(protected ClientFake $clientFake) {}
 
     public function __invoke(Closure $closure): ClientFake
     {

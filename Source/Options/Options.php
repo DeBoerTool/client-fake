@@ -18,8 +18,7 @@ class Options implements OptionsInterface
         public readonly string $base,
         public string|false $version = 'v1',
         public readonly array $headers = ['Fake' => 'true'],
-    ) {
-    }
+    ) {}
 
     public function service(): string
     {

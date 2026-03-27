@@ -11,7 +11,7 @@ class EndpointsMap
     private array $endpoints;
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NotAMapException
+     * @throws NotAMapException
      */
     public function __construct(array $endpoints)
     {
@@ -21,7 +21,7 @@ class EndpointsMap
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
+     * @throws NoSuchEndpointsException
      */
     public function get(string $key): string
     {
@@ -30,7 +30,7 @@ class EndpointsMap
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NoSuchEndpointsException
+     * @throws NoSuchEndpointsException
      */
     public function make(string $key, ClientFake $clientFake): Endpoints
     {

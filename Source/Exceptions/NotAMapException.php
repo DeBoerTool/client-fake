@@ -14,7 +14,7 @@ class NotAMapException extends Exception
     }
 
     /**
-     * @throws \Dbt\ClientFake\Exceptions\NotAMapException
+     * @throws NotAMapException
      */
     public static function check(array $array, string $type, string $expected): void
     {
